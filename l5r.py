@@ -43,7 +43,7 @@ def generate_skill_mask(skill_name, rank, use_tallys = True, width = 150, height
     draw.line([(0,height-1),(width-40,height-1)], width = 2, fill = "black")
     draw.line([(width-30, height - 1), (width,height-1)], width = 2, fill = "black")
 
-    text_font = ImageFont.truetype("resources/Present_LT_Black_Condensed.ttf",14)
+    text_font = ImageFont.truetype("resources/present_lt_black_condensed.ttf",14)
     draw.text((0,0), skill_name, font = text_font, fill="black")
     del draw
     text_mask.paste(generate_tally_mask(5), (120,4))
