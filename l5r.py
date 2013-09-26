@@ -26,14 +26,13 @@ def generate_tally_mask(tallys):
     draw.colour = "black"
 
     for t in range(0, verticals):
-        draw.line([(2+ ( t*4 ) ,0),( 2 + ( t*4 ),10)], fill = "black")
+        draw.line([(2 + ( t * 4 ) ,0),( 2 + ( t * 4 ), 10)], fill = "black")
 
     for s in range(0, strikes):
         st = s + 1
         draw.line([((st * 16) , 0),((st * 16 - 16) , 10)], fill = "black")
 
     del draw
-
     return tally_mask
 
 # returns an image with lines and skill tallys
@@ -62,4 +61,4 @@ def imgtest():
     return serve_pil_image(generate_skill_mask("Lore: Maho", rank = 5))
 
 if __name__ == '__main__':
-    l5r.run(debug=True)
+    l5r.run(debug = True)
