@@ -1,7 +1,8 @@
 import StringIO
 from PIL import Image, ImageDraw
 from flask import send_file
-from config import FONT, USE_TALLYS
+from config import *
+from skills import Skill
 
 __author__ = 'Charlie'
 
@@ -14,46 +15,48 @@ def generate_tally_mask(tallys):
     verticals = tallys - strikes
     width = 4 + verticals * 4
 
-    tally_mask = Image.new(mode = "L", size = (width, 10), color = "White")
+    tally_mask = Image.new(mode = "L", size = (width, 10), color = SHEET_BACKGROUND_COLOR)
     draw = ImageDraw.Draw(tally_mask)
     draw.colour = "black"
 
     for t in range(0, verticals):
-        draw.line([(2 + ( t * 4 ) ,0),( 2 + ( t * 4 ), 10)], fill = "black")
+        draw.line([(2 + ( t * 4 ) ,0),( 2 + ( t * 4 ), 10)], fill = SHEET_FOREGROUND_COLOR)
 
     for s in range(0, strikes):
         st = s + 1
-        draw.line([((st * 16) , 0),((st * 16 - 16) , 10)], fill = "black")
+        draw.line([((st * 16) , 0),((st * 16 - 16) , 10)], fill = SHEET_FOREGROUND_COLOR)
 
     del draw
     return tally_mask
 
 
 
-def generate_skill_mask(skill, use_tallys = USE_TALLYS,  font = FONT, width = 150, height = 18,):
+def generate_skill_mask(skill, use_tallys = SKILLS_USE_TALLYS,  font = SKILL_FONT, width = SKILLS_CELL_WIDTH, height = SKILLS_CELL_HEIGHT,):
     """Returns an image for a skill...
+    @type skill:Skill
     @rtype: Images"""
 
-    text_mask = Image.new(mode="L", size = (width, height), color ="white")
+    text_mask = Image.new(mode="L", size = (width, height), color = SHEET_BACKGROUND_COLOR)
     draw = ImageDraw.Draw(text_mask)
 
-    draw.line([(0,height-1),(width-40,height-1)], width = 2, fill = "black")
-    draw.line([(width-30, height - 1), (width,height-1)], width = 2, fill = "black")
-    draw.text((0,0), skill.Skill, font = font, fill="black")
+    draw.line([(0,height-SKILL_LINE_THICKNESS),(width-40,height-SKILL_LINE_THICKNESS)], width = SKILL_LINE_THICKNESS, fill = SHEET_FOREGROUND_COLOR)
+    draw.line([(width - 30, height - SKILL_LINE_THICKNESS), ( width, height - SKILL_LINE_THICKNESS)], width = SKILL_LINE_THICKNESS, fill = SHEET_FOREGROUND_COLOR)
+    draw.text((0,0), skill.skill, font = font, fill = SHEET_FOREGROUND_COLOR)
 
     del draw
-    text_mask.paste(generate_tally_mask(skill.Rank), (120,4))
+    text_mask.paste(generate_tally_mask(skill.rank), (SKILLS_CELL_WIDTH - 30,4))
     return text_mask
 
 
 
-def generate_skills_mask(skills, width = 150, height = 400):
+def generate_skills_mask(skills, box_size = SKILLS_BOX_SIZE):
     """returns a skills mask
+    @type skills: List(Skill)
     @rType: Image"""
-    skills_mask = Image.new(mode = "L", size = (width, height), color = "white")
+    skills_mask = Image.new(mode = "L", size = box_size, color = SHEET_BACKGROUND_COLOR)
 
-    for i, skill in enumerate(sorted(skills, key = lambda k: k.Skill)):
-        skills_mask.paste(generate_skill_mask(skill), (0, (i + 1) *20))
+    for i, skill in enumerate(skills):
+        skills_mask.paste(generate_skill_mask(skill), (0, (i + 1) * SKILL_VERTICAL_SPACING))
 
     return skills_mask
 
