@@ -43,8 +43,12 @@ def generate_skill_mask(skill, use_tallys = SKILLS_USE_TALLYS,  font = SKILL_FON
     draw.line([(width - 30, height - SKILL_LINE_THICKNESS), ( width, height - SKILL_LINE_THICKNESS)], width = SKILL_LINE_THICKNESS, fill = SHEET_FOREGROUND_COLOR)
     draw.text((0,0), skill.skill, font = font, fill = SHEET_FOREGROUND_COLOR)
 
+    if use_tallys:
+        text_mask.paste(generate_tally_mask(skill.rank), (SKILLS_CELL_WIDTH - 30,4))
+    else:
+        draw.text((SKILLS_CELL_WIDTH -30, 0), str(skill.rank), font = font, fill = SHEET_FOREGROUND_COLOR)
+
     del draw
-    text_mask.paste(generate_tally_mask(skill.rank), (SKILLS_CELL_WIDTH - 30,4))
     return text_mask
 
 
